@@ -13,10 +13,10 @@ col = 'aT'
 for f in glob.glob(sys.argv[1]):
     walk_data = pd.read_csv(f, sep=',', parse_dates=['time'], names=['time', 'ax', 'ay', 'az', 'aT'], skiprows=1)
     walk_data['time'] = pd.to_datetime(walk_data.time.astype(str), format='%H:%M:%S:%f')
-    last_time = walk_data.iloc[-1]['time'] - datetime.timedelta(seconds=3)
+    last_time = walk_data.iloc[-1]['time'] - datetime.timedelta(seconds=5)
     walk_data = walk_data[walk_data['time'] <= last_time]
 
-    b, a = signal.butter(3, 0.03, btype='lowpass', analog=False)
+    b, a = signal.butter(3, 0.02, btype='lowpass', analog=False)
     lowpass = signal.filtfilt(b, a, walk_data[col])
 
     # fourier transform
@@ -38,7 +38,8 @@ for f in glob.glob(sys.argv[1]):
     plt.plot(walk_data["time"], walk_data[col], 'b.')
     plt.plot(walk_data["time"], lowpass, 'r-')
 
-    peaks, _ = signal.find_peaks(lowpass, height=2)
+    peaks, _ = signal.find_peaks(lowpass, height=1.5)
+    print(peaks)
     plt.plot(walk_data['time'][peaks], lowpass[peaks], "x", color='magenta', markersize=8)
     plt.plot(walk_data['time'], np.zeros_like(lowpass)+2, "--", color="gray")
     plt.savefig(f'output/{f[4:-4]}.png')
