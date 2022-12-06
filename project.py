@@ -38,13 +38,15 @@ for f in glob.glob(sys.argv[1]):
     # # timearr = mdates.date2num(walk_data.time)
     # poly = np.poly1d(np.polyfit(timearr, lowpass, 10))
 
+    df_unix_sec = walk_data['time'].values.astype(float)
+    w = np.linspace(0.01, 10, len(walk_data.index))
+    pgram = signal.lombscargle(np.array(df_unix_sec), np.array(lowpass), np.array(w), normalize=True)
     # fourier transform
-    yf = rfft(lowpass)
-    xf = rfftfreq(len(walk_data.index), 205)
+    # yf = rfft(lowpass)
+    # xf = rfftfreq(len(walk_data.index), 205)
 
     plt.figure(figsize=(12,4))
-    plt.plot(xf, np.abs(yf))
-    print(f'output{f[4:-4]}fft.png')
+    plt.plot(w, pgram)
     plt.savefig(f'output{f[4:-4]}fft.png')
 
 
