@@ -44,7 +44,8 @@ for f in glob.glob(sys.argv[1]):
 
     plt.figure(figsize=(12,4))
     plt.plot(xf, np.abs(yf))
-    plt.savefig(f'output/{f[4:-4]}fft.png')
+    print(f'output{f[4:-4]}fft.png')
+    plt.savefig(f'output{f[4:-4]}fft.png')
 
 
 
@@ -60,4 +61,4 @@ for f in glob.glob(sys.argv[1]):
 
     plt.plot(walk_data['time'][peaks], lowpass[peaks], "x", color='magenta', markersize=8)
     plt.plot(walk_data['time'], np.zeros_like(lowpass)+peak_heights, "--", color="gray")
-    plt.savefig(f'output/{f[4:-4]}.png')
+    plt.savefig(f'output{f[4:-4]}.png')
