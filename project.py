@@ -6,7 +6,7 @@ import datetime as dt
 from statsmodels.nonparametric.smoothers_lowess import lowess
 import glob
 from scipy import signal
-from scipy.fft import rfft, rfftfreq, fft, ifft
+from scipy.fft import rfft, rfftfreq, fft, ifft, fftfreq
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
@@ -35,10 +35,6 @@ for f in glob.glob(sys.argv[1]):
     lowpass = signal.filtfilt(b, a, walk_data[col])
     peak_heights = 1.5
     peaks, _ = signal.find_peaks(lowpass, height=peak_heights)
-    print(peaks)
-
-    print(walk_data['time'][41])
-
 
     # fourier transform
     # yf = rfft(lowpass)
@@ -52,17 +48,18 @@ for f in glob.glob(sys.argv[1]):
 
     # trying something new
     # https://pythonnumericalmethods.berkeley.edu/notebooks/chapter24.04-FFT-in-Python.html
-    X = fft(lowpass)
-    N=len(X)
-    n = np.arange(N)
+    # X = fft(lowpass)
+    # print(X)
+    # N = len(X)
+    # n = np.arange(N)
 
-    sr = 205 #ex: 1/3600
-    T = N/sr
-    freq = n/T
+    # sr = 205 #ex: 1/3600
+    # T = N/sr
+    # freq = n/T
 
-    n_oneside = N//2
-    f_oneside = freq[:n_oneside]
-
+    # n_oneside = N//2
+    # f_oneside = freq[:n_oneside]
+    f_oneside = rfftfreq(N, 1/205)[:N//2]
     plt.figure(figsize = (12, 6))
     plt.plot(f_oneside, np.abs(X[:n_oneside]), 'b')
     plt.xlabel('Freq (Hz)')
