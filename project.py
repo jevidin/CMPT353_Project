@@ -53,7 +53,7 @@ for f in glob.glob(sys.argv[1]):
     plt.ylabel("Total acceleration")
     plt.figure(figsize=(12,4))
 
-    plt.plot(walk_data['time'], poly[walk_data['time']])
+    # plt.plot(walk_data['time'], poly[walk_data['time']])
 
     plt.plot(walk_data["time"], walk_data[col], 'b.', markersize=1)
     plt.plot(walk_data["time"], lowpass, 'r-')
