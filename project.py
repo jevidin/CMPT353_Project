@@ -1,4 +1,5 @@
 import sys
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,6 +14,9 @@ from sklearn.pipeline import make_pipeline
 import datetime
 import matplotlib.dates as mdates
 # from pykalman import KalmanFilter
+
+if not os.path.isdir("output/"):
+    os.makedirs("output/")
 col = 'aT'
 for f in glob.glob(sys.argv[1]):
     walk_data = pd.read_csv(f, sep=',', parse_dates=['time'], names=['time', 'ax', 'ay', 'az', 'aT'], skiprows=1)
