@@ -24,23 +24,17 @@ for f in glob.glob(sys.argv[1]):
     last_time = walk_data.iloc[-1]['time'] - datetime.timedelta(seconds=5)
     walk_data = walk_data[walk_data['time'] <= last_time]
 
+    #cut off extra unnecessary data, remove data before the first step
+    tmp = walk_data[(walk_data[col]>=1.5)]
+    first_time = tmp.iloc[0]['time']
+    #deletes rows before that time
+    walk_data = walk_data[(walk_data['time'])>=first_time]
+    walk_data = walk_data.reset_index()
+
     b, a = signal.butter(3, 0.02, btype='lowpass', analog=False)
     lowpass = signal.filtfilt(b, a, walk_data[col])
     peak_heights = 1.5
     peaks, _ = signal.find_peaks(lowpass, height=peak_heights)
-
-    # X = walk_data['time']
-    # y = lowpass
-    # model = make_pipeline(
-    #     PolynomialFeatures(degree=10, include_bias=True),
-    #     LinearRegression(fit_intercept=False)
-
-    # )
-    # model.fit(X, y)
-    # timearr = np.array(walk_data.time.values)
-    # print(lowpass.dtype)
-    # # timearr = mdates.date2num(walk_data.time)
-    # poly = np.poly1d(np.polyfit(timearr, lowpass, 10))
 
     df_unix_sec = walk_data['time'].values.astype(float)
     w = np.linspace(0.01, 10, len(walk_data.index))
