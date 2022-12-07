@@ -1,8 +1,7 @@
-import sys
+import sys, os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import datetime as dt
 from statsmodels.nonparametric.smoothers_lowess import lowess
 import glob
 from scipy import signal
@@ -15,6 +14,9 @@ import matplotlib.dates as mdates
 import warnings
 warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
 # from pykalman import KalmanFilter
+
+if not os.path.isdir("output/"):
+    os.makedirs("output/")
 col = 'aT'
 
 
