@@ -71,6 +71,8 @@ for f in glob.glob(sys.argv[1]):
     peak_vals = lowpass[peaks]
     odd = peak_vals[1::2]
     even = peak_vals[0::2]
-    # print(f"ODD {odd} EVEN {even}")
+    if len(peak_vals > 10):
+        peak_vals = peak_vals[:10]
+    # print(len(peak_vals))
     mann_u_p = stats.mannwhitneyu(odd, even).pvalue
     print(f"MANN U p-val for {f[5:-4]} : {mann_u_p}")
