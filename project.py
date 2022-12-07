@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.nonparametric.smoothers_lowess import lowess
 import glob
-from scipy import signal
-from scipy.fft import rfft, rfftfreq, fft, ifft, fftfreq
+from scipy import signal, stats
+from scipy.fft import rfft, rfftfreq
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
@@ -15,8 +15,7 @@ import warnings
 warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
 # from pykalman import KalmanFilter
 
-if not os.path.isdir("output/"):
-    os.makedirs("output/")
+os.makedirs("output/", exist_ok=True)
 col = 'aT'
 
 
@@ -66,5 +65,12 @@ for f in glob.glob(sys.argv[1]):
 
     plt.plot(walk_data['time'][peaks], lowpass[peaks], "x", color='magenta', markersize=8)
     plt.plot(walk_data['time'], np.zeros_like(lowpass)+peak_heights, "--", color="gray")
-    plt.savefig(f'output{f[4:-4]}.png')
-    plt.close('all')
+    plt.savefig(f'output/{f[5:-4]}.png')
+
+    # Peak analysis
+    peak_vals = lowpass[peaks]
+    odd = peak_vals[1::2]
+    even = peak_vals[0::2]
+    # print(f"ODD {odd} EVEN {even}")
+    mann_u_p = stats.mannwhitneyu(odd, even).pvalue
+    print(f"MANN U p-val for {f[5:-4]} : {mann_u_p}")
