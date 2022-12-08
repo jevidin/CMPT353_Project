@@ -18,7 +18,6 @@ warnings.filterwarnings("ignore", message="divide by zero encountered in true_di
 os.makedirs("output/", exist_ok=True)
 col = 'aT'
 
-
 # all files in data
 for f in glob.glob(sys.argv[1]):
     walk_data = pd.read_csv(f, sep=',', parse_dates=['time'], names=['time', 'ax', 'ay', 'az', 'aT'], skiprows=1)
@@ -50,19 +49,20 @@ for f in glob.glob(sys.argv[1]):
     # period
     t_h = 1/ f_oneside    
 
+    # plot frequency graph
     plt.figure(figsize=(12,6))
     plt.plot(t_h, np.abs(X[:n_oneside])/n_oneside)
+    plt.title("Frequencies")
     plt.xlabel('Period (seconds)')
-    plt.savefig(f'output{f[4:-4]}fft.png')
+    plt.savefig(f'output/{f[5:-4]}fft.png')
 
-    plt.title("Walk")
+    # plot filtered data
+    plt.figure(figsize=(12,4))
+    plt.title("Walk data")
     plt.xlabel("Time")
     plt.ylabel("Total acceleration")
-    plt.figure(figsize=(12,4))
-
     plt.plot(walk_data["time"], walk_data[col], 'b.', markersize=1)
     plt.plot(walk_data["time"], lowpass, 'r-')
-
     plt.plot(walk_data['time'][peaks], lowpass[peaks], "x", color='magenta', markersize=8)
     plt.plot(walk_data['time'], np.zeros_like(lowpass)+peak_heights, "--", color="gray")
     plt.savefig(f'output/{f[5:-4]}.png')
