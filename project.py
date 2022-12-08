@@ -1,12 +1,11 @@
-import sys
+import sys, os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import datetime as dt
 from statsmodels.nonparametric.smoothers_lowess import lowess
 import glob
-from scipy import signal
-from scipy.fft import rfft, rfftfreq, fft, ifft, fftfreq
+from scipy import signal, stats
+from scipy.fft import rfft, rfftfreq, fft
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
@@ -15,8 +14,9 @@ import matplotlib.dates as mdates
 import warnings
 warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
 # from pykalman import KalmanFilter
-col = 'aT'
 
+os.makedirs("output/", exist_ok=True)
+col = 'aT'
 
 # all files in data
 for f in glob.glob(sys.argv[1]):
@@ -49,20 +49,30 @@ for f in glob.glob(sys.argv[1]):
     # period
     t_h = 1/ f_oneside    
 
+    # plot frequency graph
     plt.figure(figsize=(12,6))
     plt.plot(t_h, np.abs(X[:n_oneside])/n_oneside)
+    plt.title("Frequencies")
     plt.xlabel('Period (seconds)')
-    plt.savefig(f'output{f[4:-4]}fft.png')
+    plt.savefig(f'output/{f[5:-4]}fft.png')
 
-    plt.title("Walk")
+    # plot filtered data
+    plt.figure(figsize=(12,4))
+    plt.title("Walk data")
     plt.xlabel("Time")
     plt.ylabel("Total acceleration")
-    plt.figure(figsize=(12,4))
-
     plt.plot(walk_data["time"], walk_data[col], 'b.', markersize=1)
     plt.plot(walk_data["time"], lowpass, 'r-')
-
     plt.plot(walk_data['time'][peaks], lowpass[peaks], "x", color='magenta', markersize=8)
     plt.plot(walk_data['time'], np.zeros_like(lowpass)+peak_heights, "--", color="gray")
-    plt.savefig(f'output{f[4:-4]}.png')
-    plt.close('all')
+    plt.savefig(f'output/{f[5:-4]}.png')
+
+    # Peak analysis
+    peak_vals = lowpass[peaks]
+    odd = peak_vals[1::2]
+    even = peak_vals[0::2]
+    if len(peak_vals > 10):
+        peak_vals = peak_vals[:10]
+    # print(len(peak_vals))
+    mann_u_p = stats.mannwhitneyu(odd, even).pvalue
+    print(f"MANN U p-val for {f[5:-4]} : {mann_u_p}")
