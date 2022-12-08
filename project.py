@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.nonparametric.smoothers_lowess import lowess
 import glob
 from scipy import signal, stats
-from scipy.fft import rfft, rfftfreq
+from scipy.fft import rfft, rfftfreq, fft
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
