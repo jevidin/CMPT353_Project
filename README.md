@@ -4,7 +4,7 @@ In this project we will analyze patterns within steps taken to see if we can ide
 
 # Required Libraries
 
-All libraries should be included in anacodna
+All libraries should be included in Anaconda
 
 pandas, numpy, matplotlib, statsmodels, scipy, sklearn
 
@@ -14,10 +14,7 @@ pandas, numpy, matplotlib, statsmodels, scipy, sklearn
 $python project.py data/*.csv output
 ```
 
-# Order of Execution
-
-idk if we need this??
-
+Before running, ensure project has a data directory with csv files inside of it.
 # Files Produced
 
-After running the code, there should be x images in output, names: 
+After running the code, this program will create output for each data file, a walk datagraph, frequency graph in the output directory, as well as Mann-U p-values on the terminal.
