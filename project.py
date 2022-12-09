@@ -52,13 +52,13 @@ for f in glob.glob(sys.argv[1]):
     # plot frequency graph
     plt.figure(figsize=(12,6))
     plt.plot(t_h, np.abs(X[:n_oneside])/n_oneside)
-    plt.title("Frequencies")
+    plt.title(f"Frequencies for {f[5:-4]}")
     plt.xlabel('Period (seconds)')
     plt.savefig(f'output/{f[5:-4]}fft.png')
 
     # plot filtered data
     plt.figure(figsize=(12,4))
-    plt.title("Walk data")
+    plt.title(f"Walk data for {f[5:-4]}")
     plt.xlabel("Time")
     plt.ylabel("Total acceleration")
     plt.plot(walk_data["time"], walk_data[col], 'b.', markersize=1)
