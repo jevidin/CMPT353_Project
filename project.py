@@ -2,18 +2,12 @@ import sys, os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from statsmodels.nonparametric.smoothers_lowess import lowess
 import glob
 from scipy import signal, stats
-from scipy.fft import rfft, rfftfreq, fft
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import make_pipeline
+from scipy.fft import rfftfreq, fft
 import datetime
-import matplotlib.dates as mdates
 import warnings
 warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
-# from pykalman import KalmanFilter
 
 os.makedirs("output/", exist_ok=True)
 col = 'aT'
@@ -35,6 +29,8 @@ for f in glob.glob(sys.argv[1]):
     #Butterworth filter
     b, a = signal.butter(3, 0.02, btype='lowpass', analog=False)
     lowpass = signal.filtfilt(b, a, walk_data[col])
+
+    #find peaks above 1.5
     peak_heights = 1.5
     peaks, _ = signal.find_peaks(lowpass, height=peak_heights)
 
@@ -42,7 +38,6 @@ for f in glob.glob(sys.argv[1]):
     # https://pythonnumericalmethods.berkeley.edu/notebooks/chapter24.04-FFT-in-Python.html
     X = fft(lowpass)
     N = len(X)
-
     n_oneside = N//2
     f_oneside = rfftfreq(N, 1/205)[:n_oneside]
 
